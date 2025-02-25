@@ -1,0 +1,23 @@
+name: Test boolean inputs
+
+on:
+  workflow_dispatch:
+    inputs:
+      BOOLEAN_INPUT:
+        description: input
+        type: boolean
+        default: true
+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+        - name: Echo if BOOLEAN_INPUT is true
+          if: ${{ inputs.BOOLEAN_INPUT }}
+          run: |
+            echo "BOOLEAN_INPUT is true"
+        - name: Echo if BOOLEAN_INPUT is false
+          if: ${{ !inputs.BOOLEAN_INPUT }}
+          run: |
+            echo "BOOLEAN_INPUT is false"
