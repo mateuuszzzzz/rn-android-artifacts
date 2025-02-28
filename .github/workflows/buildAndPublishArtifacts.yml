@@ -29,4 +29,6 @@ jobs:
       - name: Build artifacts
         run: |
           cd ${{ github.workspace }}/react-native
+          yarn
+          yarn --cwd packages/react-native-codegen build
           ./gradlew assembleRelease
