@@ -1,0 +1,28 @@
+name: Build And Publish Artifacts
+on:
+  workflow_dispatch:
+
+jobs:
+  build-react-native:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Clone React Native repository
+        run: git clone --depth 1 https://github.com/facebook/react-native.git ${{ github.workspace }}/react-native
+
+      - name: Copy patched react-native to cloned repository
+        run: |
+          cp -rT node_modules/react-native ${{ github.workspace }}/react-native/packages/react-native
+          cd ${{ github.workspace }}/react-native/packages/react-native
+          ls -a
