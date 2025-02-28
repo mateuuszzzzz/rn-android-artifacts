@@ -32,4 +32,5 @@ jobs:
           cd ${{ github.workspace }}/react-native
           yarn
           yarn --cwd packages/react-native-codegen build
+          export ANDROID_NDK_HOME=$ANDROID_HOME/ndk/27.1.12297006
           ./gradlew assembleRelease
