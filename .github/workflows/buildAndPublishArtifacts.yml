@@ -26,11 +26,12 @@ jobs:
       - name: Copy patched react-native to cloned repository
         run: |
           cp -rT node_modules/react-native ${{ github.workspace }}/react-native/packages/react-native
+          cd ${{ github.workspace }}/react-native
+          git checkout v0.78.0
 
       - name: Build artifacts
         run: |
           cd ${{ github.workspace }}/react-native
-          git checkout v0.78.0
           yarn
           yarn --cwd packages/react-native-codegen build
           ./gradlew assembleRelease
