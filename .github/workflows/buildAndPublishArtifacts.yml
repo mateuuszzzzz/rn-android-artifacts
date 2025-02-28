@@ -21,7 +21,7 @@ jobs:
 
       - name: Clone React Native repository
         run: |
-          git clone --depth 1 https://github.com/facebook/react-native.git ${{ github.workspace }}/react-native
+          git clone https://github.com/facebook/react-native.git ${{ github.workspace }}/react-native
 
       - name: Copy patched react-native to cloned repository
         run: |
