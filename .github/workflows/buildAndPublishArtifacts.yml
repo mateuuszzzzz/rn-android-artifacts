@@ -38,15 +38,12 @@ jobs:
 
       - name: Build artifacts
         env:
-          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+          ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
           cd ${{ github.workspace }}/react-native
           yarn
           yarn --cwd packages/react-native-codegen build
           
-          echo $ANDROID_NDK_HOME
-          
-          echo "Check available ndks"
-          ls $ANDROID_SDK_ROOT/ndk
+          echo $ANDROID_NDK
 
           ./gradlew assembleRelease
