@@ -42,7 +42,7 @@ jobs:
           yarn --cwd packages/react-native-codegen build
           
           echo $ANDROID_NDK_HOME
-          echo "ndk.dir=$ANDROID_NDK_HOME" >> ./packages/react-native/local.properties
+          echo "ndk.dir=$ANDROID_NDK_HOME/../27.1.12297006" >> ./packages/react-native/local.properties
           
           echo "Check available ndks"
           ls $ANDROID_SDK_ROOT/ndk
