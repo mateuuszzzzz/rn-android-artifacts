@@ -39,4 +39,7 @@ jobs:
           cd ${{ github.workspace }}/react-native
           yarn
           yarn --cwd packages/react-native-codegen build
+          
+          echo "ndk.dir=$ANDROID_NDK_HOME" >> ./packages/react-native/local.properties
+          
           ./gradlew assembleRelease
