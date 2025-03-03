@@ -20,6 +20,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - uses: nttld/setup-ndk@v1
+        id: setup-ndk
         with:
           ndk-version: r27b
           link-to-sdk: true
@@ -36,13 +37,14 @@ jobs:
           cp -rT node_modules/react-native ${{ github.workspace }}/react-native/packages/react-native
 
       - name: Build artifacts
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
           cd ${{ github.workspace }}/react-native
           yarn
           yarn --cwd packages/react-native-codegen build
           
           echo $ANDROID_NDK_HOME
-          echo "ndk.dir=$ANDROID_NDK_HOME/../27.1.12297006" >> ./packages/react-native/local.properties
           
           echo "Check available ndks"
           ls $ANDROID_SDK_ROOT/ndk
