@@ -31,6 +31,9 @@ jobs:
         run: |
           cd ${{ github.workspace }}/react-native/packages
           rm -rf ./rn-tester
+          
+          cd ..
+          head -n $(($(wc -l < settings.gradle.kts) - 5)) settings.gradle.kts > temp && mv temp settings.gradle.kts
 
       - name: Build artifacts
         run: |
