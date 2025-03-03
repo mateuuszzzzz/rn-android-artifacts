@@ -21,7 +21,7 @@ jobs:
 
       - uses: nttld/setup-ndk@v1
         with:
-          ndk-version: r27c
+          ndk-version: 27.1.12297006
 
       - name: Install dependencies
         run: npm install
