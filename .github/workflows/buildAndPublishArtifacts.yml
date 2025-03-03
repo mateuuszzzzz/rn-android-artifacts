@@ -16,15 +16,6 @@ jobs:
           node-version: 18
           cache: 'npm'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-
-      - uses: nttld/setup-ndk@v1
-        id: setup-ndk
-        with:
-          ndk-version: r27b
-          link-to-sdk: true
-
       - name: Install dependencies
         run: npm install
 
@@ -37,13 +28,11 @@ jobs:
           cp -rT node_modules/react-native ${{ github.workspace }}/react-native/packages/react-native
 
       - name: Build artifacts
-        env:
-          ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
         run: |
           cd ${{ github.workspace }}/react-native
           yarn
           yarn --cwd packages/react-native-codegen build
           
-          echo $ANDROID_NDK
-
+          export ANDROID_NDK_VERSION="$(basename "$ANDROID_NDK")"
+          
           ./gradlew assembleRelease
