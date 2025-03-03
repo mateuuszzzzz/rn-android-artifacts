@@ -27,11 +27,6 @@ jobs:
         run: |
           cp -rT node_modules/react-native ${{ github.workspace }}/react-native/packages/react-native
 
-      - name: Remove unnecessary `rn-tester` package
-        run: |
-          cd ${{ github.workspace }}/react-native/packages
-          rm -rf ./rn-tester
-
       - name: Build artifacts
         run: |
           cd ${{ github.workspace }}/react-native
