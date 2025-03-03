@@ -42,4 +42,7 @@ jobs:
           
           echo "ndk.dir=$ANDROID_NDK_HOME" >> ./packages/react-native/local.properties
           
+          echo "Check available ndks"
+          ls $ANDROID_SDK_ROOT/ndk
+
           ./gradlew assembleRelease
