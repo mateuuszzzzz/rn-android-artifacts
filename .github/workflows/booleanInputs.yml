@@ -13,10 +13,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-        - name: Echo
-          if: github.event_name != 'workflow_dispatch'
-          run: |
-            echo ${{ github.event_name }}
         - name: Echo if BOOLEAN_INPUT is true
           if: ${{ inputs.BOOLEAN_INPUT }}
           run: |
@@ -25,3 +21,5 @@ jobs:
           if: ${{ !inputs.BOOLEAN_INPUT }}
           run: |
             echo "BOOLEAN_INPUT is false"
+        - name: Call
+          uses: ./.github/workflows/echo.yml
