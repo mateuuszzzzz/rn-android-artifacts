@@ -1,0 +1,15 @@
+name: Block Merge on Patches Change
+
+on:
+  pull_request:
+    paths:
+      - 'patches/**'
+
+jobs:
+  check-patches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Block Merge if `patches` folder is modified
+        run: |
+          echo "Files in 'patches' folder changed. Blocking merge!"
+          exit 1
