@@ -13,11 +13,14 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+        - name: Echo
+          run: |
+            echo ${{ github.event_name }}
         - name: Echo if BOOLEAN_INPUT is true
-          if: ${{ inputs.BOOLEAN_INPUT }}
+          if: inputs.BOOLEAN_INPUT
           run: |
             echo "BOOLEAN_INPUT is true"
         - name: Echo if BOOLEAN_INPUT is false
-          if: ${{ !inputs.BOOLEAN_INPUT }}
+          if: !inputs.BOOLEAN_INPUT
           run: |
             echo "BOOLEAN_INPUT is false"
