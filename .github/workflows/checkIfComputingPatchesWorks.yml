@@ -13,10 +13,10 @@ jobs:
 
       - name: Make script executable
         run: |
-          ls
-          chmod +x ../scripts/computePatchesHash.sh
+          ls -a
+          chmod +x .github/scripts/computePatchesHash.sh
 
       - name: Compute hash
         run: |
-          HASH=$(../scripts/computePatchesHash.sh)
+          HASH=$(.github/scripts/computePatchesHash.sh)
           echo "Hash: $HASH" | tee -a $GITHUB_STEP_SUMMARY
