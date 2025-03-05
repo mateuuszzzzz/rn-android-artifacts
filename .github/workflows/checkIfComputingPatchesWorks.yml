@@ -13,10 +13,16 @@ jobs:
 
       - name: Make script executable
         run: |
-          ls -a
           chmod +x .github/scripts/computePatchesHash.sh
 
-      - name: Compute hash
+      - name: Compute hash and check if version exists
         run: |
           HASH=$(.github/scripts/computePatchesHash.sh)
           echo "Hash: $HASH" | tee -a $GITHUB_STEP_SUMMARY
+          
+          if [ -f "customBuildsMap.json" ]; then
+            ENTRY=$(jq -r --arg hash "$HASH" '.[$hash] // empty' customBuildsMap.json)
+            if [ -n "$ENTRY" ]; then
+              echo "Matching entry found: $ENTRY" | tee -a $GITHUB_STEP_SUMMARY
+            fi
+          fi
