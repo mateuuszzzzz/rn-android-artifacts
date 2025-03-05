@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
         - name: Echo
+          if: github.event_name == 'workflow_dispatch'
           run: |
             echo ${{ github.event_name }}
         - name: Echo if BOOLEAN_INPUT is true
