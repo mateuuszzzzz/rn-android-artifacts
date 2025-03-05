@@ -27,5 +27,8 @@ jobs:
           with: 
             ref: jan-workflow-branch
 
+        - name: ls
+          run: ls ./.github/workflows/
+
         - name: Call
           uses: ./.github/workflows/echo.yml
