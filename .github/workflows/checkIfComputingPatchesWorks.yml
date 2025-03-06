@@ -18,11 +18,14 @@ jobs:
       - name: Compute hash and check if version exists
         run: |
           HASH=$(.github/scripts/computePatchesHash.sh)
-          echo "Hash: $HASH" | tee -a $GITHUB_STEP_SUMMARY
+          echo "Hash: $HASH"
           
           if [ -f "customBuildsMap.json" ]; then
             ENTRY=$(jq -r --arg hash "$HASH" '.[$hash] // empty' customBuildsMap.json)
             if [ -n "$ENTRY" ]; then
-              echo "Matching entry found: $ENTRY" | tee -a $GITHUB_STEP_SUMMARY
+              echo "Matching version found: $ENTRY"
+            else
+              echo "Matching version not found"
+              exit 1
             fi
           fi
