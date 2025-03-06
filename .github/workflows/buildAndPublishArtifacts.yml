@@ -46,7 +46,7 @@ jobs:
           jq --arg newLatest "$NEW_LATEST_VALUE" '.latest = $newLatest' "$JSON_FILE" > temp.json && mv temp.json "$JSON_FILE"
           
           echo "$JSON_FILE found. Updating the file."
-          jq '. + {"${HASH}": "${$NEW_LATEST_VALUE}"}' "$JSON_FILE" > temp.json && mv temp.json "$JSON_FILE"
+          jq '. + {${HASH}: ${$NEW_LATEST_VALUE}}' "$JSON_FILE" > temp.json && mv temp.json "$JSON_FILE"
           
           cat $JSON_FILE
 
