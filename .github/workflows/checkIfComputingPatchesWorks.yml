@@ -1,0 +1,30 @@
+name: Compute Hash of Patches
+
+on:
+  pull_request:
+
+jobs:
+  compute-hash:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Make script executable
+        run: |
+          chmod +x .github/scripts/computePatchesHash.sh
+
+      - name: Compute hash and check if version exists
+        run: |
+          HASH=$(.github/scripts/computePatchesHash.sh)
+          
+          if [ -f "customBuildsMap.json" ]; then
+            ENTRY=$(jq -r --arg hash "$HASH" '.[$hash] // empty' customBuildsMap.json)
+            if [ -n "$ENTRY" ]; then
+              echo "Matching version found: $ENTRY"
+            else
+              echo "Matching version not found for hash: $HASH"
+              exit 1
+            fi
+          fi
