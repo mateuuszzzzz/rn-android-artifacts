@@ -21,17 +21,35 @@ jobs:
           PR_NUMBER=${{ github.event.inputs.PULL_REQUEST_NUMBER }}
           gh pr checkout ${PR_NUMBER}
 
+      - name: Make script executable
+        run: |
+          chmod +x .github/scripts/computePatchesHash.sh
+
       - name: Modify customBuildsMap.json
         run: |
           JSON_FILE="customBuildsMap.json"
+          HASH=$(.github/scripts/computePatchesHash.sh)
           
-          if [ -f "$JSON_FILE" ]; then
-            echo "$JSON_FILE found. Updating the file."
-            jq '. + {"ABC": "123"}' "$JSON_FILE" > temp.json && mv temp.json "$JSON_FILE"
-          else
-            echo "$JSON_FILE not found. Creating the file."
-            echo '{"ABC": "123"}' > "$JSON_FILE"
-          fi
+          # Extract the current "latest" value
+          LATEST_VALUE=$(jq -r '.latest' "$JSON_FILE")
+          echo "Current latest value: $LATEST_VALUE"
+
+          # Extract the prefix and number separately
+          PREFIX=$(echo "$LATEST_VALUE" | sed -E 's/^(.*)-[0-9]+$/\1/')
+          NUMBER=$(echo "$LATEST_VALUE" | sed -E 's/^.*-([0-9]+)$/\1/')
+
+          # Increment the number
+          NEW_NUMBER=$((NUMBER + 1))
+          NEW_LATEST_VALUE="$PREFIX-$NEW_NUMBER"
+
+          echo "New latest value: $NEW_LATEST_VALUE"
+          jq --arg newLatest "$NEW_LATEST_VALUE" '.latest = $newLatest' "$JSON_FILE" > temp.json && mv temp.json "$JSON_FILE"
+          
+          echo "$JSON_FILE found. Updating the file."
+          jq '. + {"${HASH}": "${$NEW_LATEST_VALUE}"}' "$JSON_FILE" > temp.json && mv temp.json "$JSON_FILE"
+          
+          cat $JSON_FILE
+
 
       - name: Commit Changes
         run: |
