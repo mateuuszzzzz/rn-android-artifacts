@@ -20,6 +20,26 @@ jobs:
           git fetch origin pull/${PR_NUMBER}/head:pr-${PR_NUMBER}
           gh pr checkout ${PR_NUMBER}
 
+      - name: Modify customBuildsMap.json
+        run: |
+          JSON_FILE="customBuildsMap.json"
+          
+          if [ -f "$JSON_FILE" ]; then
+            echo "$JSON_FILE found. Updating the file."
+            jq '. + {"ABC": "123"}' "$JSON_FILE" > temp.json && mv temp.json "$JSON_FILE"
+          else
+            echo "$JSON_FILE not found. Creating the file."
+            echo '{"ABC": "123"}' > "$JSON_FILE"
+          fi
+
+      - name: Commit Changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add customBuildsMap.json
+          git commit -m "Add new entry to customBuildsMap.json"
+          git push
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -46,23 +66,3 @@ jobs:
           export ANDROID_NDK_VERSION="$(basename "$ANDROID_NDK")"
           
           ./gradlew assembleRelease
-
-      - name: Modify customBuildsMap.json
-        run: |
-          JSON_FILE="customBuildsMap.json"
-          
-          if [ -f "$JSON_FILE" ]; then
-            echo "$JSON_FILE found. Updating the file."
-            jq '. + {"ABC": "123"}' "$JSON_FILE" > temp.json && mv temp.json "$JSON_FILE"
-          else
-            echo "$JSON_FILE not found. Creating the file."
-            echo '{"ABC": "123"}' > "$JSON_FILE"
-          fi
-
-      - name: Commit Changes
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          git add customBuildsMap.json
-          git commit -m "Add new entry to customBuildsMap.json"
-          git push
