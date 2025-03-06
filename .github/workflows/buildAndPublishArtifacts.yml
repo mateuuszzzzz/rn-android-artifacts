@@ -30,23 +30,15 @@ jobs:
           JSON_FILE="customBuildsMap.json"
           HASH=$(.github/scripts/computePatchesHash.sh)
           
-          # Extract the current "latest" value
           LATEST_VALUE=$(jq -r '.latest' "$JSON_FILE")
-          echo "Current latest value: $LATEST_VALUE"
-
-          # Extract the prefix and number separately
           PREFIX=$(echo "$LATEST_VALUE" | sed -E 's/^(.*)-[0-9]+$/\1/')
           NUMBER=$(echo "$LATEST_VALUE" | sed -E 's/^.*-([0-9]+)$/\1/')
 
-          # Increment the number
           NEW_NUMBER=$((NUMBER + 1))
           NEW_LATEST_VALUE="$PREFIX-$NEW_NUMBER"
 
-          echo "New latest value: $NEW_LATEST_VALUE"
-          jq --arg newLatest "$NEW_LATEST_VALUE" '.latest = $newLatest' "$JSON_FILE" > temp.json && mv temp.json "$JSON_FILE"
-          
-          echo "$JSON_FILE found. Updating the file."
-          jq '. + {${HASH}: ${$NEW_LATEST_VALUE}}' "$JSON_FILE" > temp.json && mv temp.json "$JSON_FILE"
+          jq --arg newLatest "$NEW_LATEST_VALUE" '.latest = $newLatest' "$JSON_FILE" > temp.json && mv temp.json "$JSON_FILE"          
+          jq --arg hash "$HASH" --arg value "$NEW_LATEST_VALUE" '. + {($hash): $value}' "$JSON_FILE" > temp.json && mv temp.json "$JSON_FILE"
           
           cat $JSON_FILE
 
