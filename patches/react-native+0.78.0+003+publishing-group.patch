@@ -1,0 +1,45 @@
+diff --git a/node_modules/react-native/ReactAndroid/gradle.properties b/node_modules/react-native/ReactAndroid/gradle.properties
+index 21b9dd3..63137d6 100644
+--- a/node_modules/react-native/ReactAndroid/gradle.properties
++++ b/node_modules/react-native/ReactAndroid/gradle.properties
+@@ -1,5 +1,5 @@
+ VERSION_NAME=0.78.0
+-react.internal.publishingGroup=com.facebook.react
++react.internal.publishingGroup=com.expensify.react
+ 
+ android.useAndroidX=true
+ 
+diff --git a/node_modules/react-native/ReactAndroid/publish.gradle b/node_modules/react-native/ReactAndroid/publish.gradle
+index 5fdf44d..32287a7 100644
+--- a/node_modules/react-native/ReactAndroid/publish.gradle
++++ b/node_modules/react-native/ReactAndroid/publish.gradle
+@@ -13,7 +13,7 @@ def signingKey = findProperty("SIGNING_KEY")
+ def signingPwd = findProperty("SIGNING_PWD")
+ 
+ def reactAndroidProjectDir = project(':packages:react-native:ReactAndroid').projectDir
+-def mavenTempLocalUrl = "http://localhost:8081/nexus/content/repositories/releases"
++def mavenTempLocalUrl = "file:///tmp/maven-local"
+ 
+ publishing {
+     publications {
+@@ -34,8 +34,6 @@ publishing {
+                 version = this.version
+             }
+ 
+-            groupId = "com.expensify.react"
+-
+             pom {
+                 name = "react-native"
+                 description = "A framework for building native apps with React"
+@@ -69,11 +67,6 @@ publishing {
+         maven {
+             name = "mavenTempLocal"
+             url = mavenTempLocalUrl
+-            allowInsecureProtocol = true
+-            credentials {
+-                username = "admin"
+-                password = "admin123"
+-            }
+         }
+     }
+ 
