@@ -1,0 +1,79 @@
+name: Build And Publish Artifacts
+on:
+  workflow_dispatch:
+    inputs:
+      PULL_REQUEST_NUMBER:
+        description: Pull Request number, if not specified defaults to main branch.
+        required: true
+        type: number
+
+jobs:
+  build-react-native:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Checkout on PR branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PR_NUMBER=${{ github.event.inputs.PULL_REQUEST_NUMBER }}
+          gh pr checkout ${PR_NUMBER}
+
+      - name: Make script executable
+        run: |
+          chmod +x .github/scripts/computePatchesHash.sh
+
+      - name: Modify customBuildsMap.json
+        run: |
+          JSON_FILE="customBuildsMap.json"
+          HASH=$(.github/scripts/computePatchesHash.sh)
+          
+          LATEST_VALUE=$(jq -r '.latest' "$JSON_FILE")
+          PREFIX=$(echo "$LATEST_VALUE" | sed -E 's/^(.*)-[0-9]+$/\1/')
+          NUMBER=$(echo "$LATEST_VALUE" | sed -E 's/^.*-([0-9]+)$/\1/')
+
+          NEW_NUMBER=$((NUMBER + 1))
+          NEW_LATEST_VALUE="$PREFIX-$NEW_NUMBER"
+
+          jq --arg newLatest "$NEW_LATEST_VALUE" '.latest = $newLatest' "$JSON_FILE" > temp.json && mv temp.json "$JSON_FILE"          
+          jq --arg hash "$HASH" --arg value "$NEW_LATEST_VALUE" '. + {($hash): $value}' "$JSON_FILE" > temp.json && mv temp.json "$JSON_FILE"
+          
+          cat $JSON_FILE
+
+
+      - name: Commit Changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add customBuildsMap.json
+          git commit -m "Add new entry to customBuildsMap.json"
+          git push
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Clone React Native repository and checkout to correct branch
+        run: |
+          git clone --branch v0.78.0 --depth 1 https://github.com/facebook/react-native.git ${{ github.workspace }}/react-native
+
+      - name: Copy patched react-native to cloned repository
+        run: |
+          cp -rT node_modules/react-native ${{ github.workspace }}/react-native/packages/react-native
+
+      - name: Build artifacts
+        run: |
+          cd ${{ github.workspace }}/react-native
+          yarn
+          yarn --cwd packages/react-native-codegen build
+          
+          export ANDROID_NDK_VERSION="$(basename "$ANDROID_NDK")"
+          
+          ./gradlew assembleRelease

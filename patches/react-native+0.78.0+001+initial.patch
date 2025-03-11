@@ -7,6 +7,7 @@ index 7f773b6..9043cfc 100644
    TaskInterface<Void> startSurface(final ReactSurfaceImpl surface) {
      final String method = "startSurface(surfaceId = " + surface.getSurfaceID() + ")";
 +    log(method, "This is patched version of ReactHost.startSurface");
++    log(method, "Some random log");
      log(method, "Schedule");
  
      attachSurface(surface);
