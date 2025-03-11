@@ -1,0 +1,46 @@
+diff --git a/node_modules/react-native/ReactAndroid/publish.gradle b/node_modules/react-native/ReactAndroid/publish.gradle
+index 32287a7..5fdf44d 100644
+--- a/node_modules/react-native/ReactAndroid/publish.gradle
++++ b/node_modules/react-native/ReactAndroid/publish.gradle
+@@ -13,7 +13,7 @@ def signingKey = findProperty("SIGNING_KEY")
+ def signingPwd = findProperty("SIGNING_PWD")
+ 
+ def reactAndroidProjectDir = project(':packages:react-native:ReactAndroid').projectDir
+-def mavenTempLocalUrl = "file:///tmp/maven-local"
++def mavenTempLocalUrl = "http://localhost:8081/nexus/content/repositories/releases"
+ 
+ publishing {
+     publications {
+@@ -34,6 +34,8 @@ publishing {
+                 version = this.version
+             }
+ 
++            groupId = "com.expensify.react"
++
+             pom {
+                 name = "react-native"
+                 description = "A framework for building native apps with React"
+@@ -67,6 +69,11 @@ publishing {
+         maven {
+             name = "mavenTempLocal"
+             url = mavenTempLocalUrl
++            allowInsecureProtocol = true
++            credentials {
++                username = "admin"
++                password = "admin123"
++            }
+         }
+     }
+ 
+diff --git a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/runtime/ReactHostImpl.java b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/runtime/ReactHostImpl.java
+index 9043cfc..7f773b6 100644
+--- a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/runtime/ReactHostImpl.java
++++ b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/runtime/ReactHostImpl.java
+@@ -259,7 +259,6 @@ public class ReactHostImpl implements ReactHost {
+   /** package */
+   TaskInterface<Void> startSurface(final ReactSurfaceImpl surface) {
+     final String method = "startSurface(surfaceId = " + surface.getSurfaceID() + ")";
+-    log(method, "This is patched version of ReactHost.startSurface");
+     log(method, "Schedule");
+ 
+     attachSurface(surface);
