@@ -51,29 +51,14 @@ jobs:
           git commit -m "Add new entry to customBuildsMap.json"
           git push
 
-      - name: Set up Node.js
+      - name: Setup node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
-          cache: 'npm'
+          node-version: 20
+          cache: yarn
 
-      - name: Install dependencies
-        run: npm install
+      - name: Make publish script executable
+        run: chmod +x scripts/publish-react-native.sh
 
-      - name: Clone React Native repository and checkout to correct branch
-        run: |
-          git clone --branch v0.78.0 --depth 1 https://github.com/facebook/react-native.git ${{ github.workspace }}/react-native
-
-      - name: Copy patched react-native to cloned repository
-        run: |
-          cp -rT node_modules/react-native ${{ github.workspace }}/react-native/packages/react-native
-
-      - name: Build artifacts
-        run: |
-          cd ${{ github.workspace }}/react-native
-          yarn
-          yarn --cwd packages/react-native-codegen build
-          
-          export ANDROID_NDK_VERSION="$(basename "$ANDROID_NDK")"
-          
-          ./gradlew assembleRelease
+      - name: Execute publish script
+        run: ./scripts/publish-react-native.sh
