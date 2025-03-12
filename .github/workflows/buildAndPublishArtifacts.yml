@@ -58,23 +58,13 @@ jobs:
 
   publish-react-native:
     needs: update-custom-builds
-    runs-on: ubuntu-latest  # Note: '8-core-ubuntu' might be specific to React Native's internal runners
+    runs-on: ubuntu-latest 
     container:
       image: reactnativecommunity/react-native-android:latest
       env:
         TERM: "dumb"
         GRADLE_OPTS: "-Dorg.gradle.daemon=false"
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Checkout on PR branch
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          PR_NUMBER=${{ github.event.inputs.PULL_REQUEST_NUMBER }}
-          gh pr checkout ${PR_NUMBER}
-
       - name: Download react-native module
         uses: actions/download-artifact@v4
         with:
