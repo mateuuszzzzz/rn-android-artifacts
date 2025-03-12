@@ -58,7 +58,12 @@ jobs:
 
   publish-react-native:
     needs: update-custom-builds
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Note: '8-core-ubuntu' might be specific to React Native's internal runners
+    container:
+      image: reactnativecommunity/react-native-android:latest
+      env:
+        TERM: "dumb"
+        GRADLE_OPTS: "-Dorg.gradle.daemon=false"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
