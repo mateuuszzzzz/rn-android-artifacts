@@ -85,7 +85,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: yarn
 
       - name: Make publish script executable
         run: chmod +x scripts/publish-react-native.sh
