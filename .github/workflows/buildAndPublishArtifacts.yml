@@ -10,6 +10,8 @@ on:
 jobs:
   update-custom-builds:
     runs-on: ubuntu-latest
+    outputs:
+      react_native_version: ${{ steps.get_version.outputs.version }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -50,6 +52,12 @@ jobs:
           
           cat $JSON_FILE
 
+      - name: Get react-native version
+        id: get_version
+        run: |
+          VERSION=$(jq -r '.dependencies["react-native"]' package.json)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Upload react-native module
         uses: actions/upload-artifact@v4
         with:
@@ -73,9 +81,9 @@ jobs:
 
       - name: Setup temporary react-native repository
         run: |
-          REACT_NATIVE_VERSION=$(jq -r '.dependencies["react-native"]' package.json)
           TEMP_REACT_NATIVE_DIR=$(mktemp -d ./tmp-react-native-repoXXX)
-          git clone --branch "v$REACT_NATIVE_VERSION" --single-branch --depth 1 https://github.com/facebook/react-native.git $TEMP_REACT_NATIVE_DIR
+          VERSION="${{ needs.update-custom-builds.outputs.react_native_version }}"
+          git clone --branch "v${VERSION}" --single-branch --depth 1 https://github.com/facebook/react-native.git $TEMP_REACT_NATIVE_DIR
           cp -r ./node_modules/react-native/ReactAndroid $TEMP_REACT_NATIVE_DIR/packages/react-native/
           echo "TEMP_REACT_NATIVE_DIR=$TEMP_REACT_NATIVE_DIR" >> $GITHUB_ENV
 
