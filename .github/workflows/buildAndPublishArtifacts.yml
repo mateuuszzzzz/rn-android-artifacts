@@ -8,7 +8,7 @@ on:
         type: number
 
 jobs:
-  build-react-native:
+  update-custom-builds:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -20,6 +20,14 @@ jobs:
         run: |
           PR_NUMBER=${{ github.event.inputs.PULL_REQUEST_NUMBER }}
           gh pr checkout ${PR_NUMBER}
+
+      - name: Setup node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
 
       - name: Make script executable
         run: |
@@ -42,14 +50,36 @@ jobs:
           
           cat $JSON_FILE
 
+      - name: Upload react-native module
+        uses: actions/upload-artifact@v4
+        with:
+          name: react-native-module
+          path: node_modules/react-native/
 
-      - name: Commit Changes
+  publish-react-native:
+    needs: update-custom-builds
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Checkout on PR branch
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          git add customBuildsMap.json
-          git commit -m "Add new entry to customBuildsMap.json"
-          git push
+          PR_NUMBER=${{ github.event.inputs.PULL_REQUEST_NUMBER }}
+          gh pr checkout ${PR_NUMBER}
+
+      - name: Download react-native module
+        uses: actions/download-artifact@v4
+        with:
+          name: react-native-module
+          path: node_modules/react-native/
+
+      - name: Setup gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: wrapper
 
       - name: Setup node.js
         uses: actions/setup-node@v4
