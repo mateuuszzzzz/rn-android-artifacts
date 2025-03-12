@@ -79,7 +79,7 @@ jobs:
       - name: Setup temporary react-native repository
         run: |
           REACT_NATIVE_VERSION=$(jq -r '.dependencies["react-native"]' package.json)
-          TEMP_REACT_NATIVE_DIR=$(mktemp -d ./tmp-react-native-repo)
+          TEMP_REACT_NATIVE_DIR=$(mktemp -d ./tmp-react-native-repoXXX)
           git clone --branch "v$REACT_NATIVE_VERSION" --single-branch --depth 1 https://github.com/facebook/react-native.git $TEMP_REACT_NATIVE_DIR
           cp -r ./node_modules/react-native/ReactAndroid $TEMP_REACT_NATIVE_DIR/packages/react-native/
           echo "TEMP_REACT_NATIVE_DIR=$TEMP_REACT_NATIVE_DIR" >> $GITHUB_ENV
