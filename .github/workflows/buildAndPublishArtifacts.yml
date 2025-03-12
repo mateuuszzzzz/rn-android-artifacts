@@ -76,18 +76,27 @@ jobs:
           name: react-native-module
           path: node_modules/react-native/
 
+      - name: Setup temporary react-native repository
+        run: |
+          REACT_NATIVE_VERSION=$(jq -r '.dependencies["react-native"]' package.json)
+          TEMP_REACT_NATIVE_DIR=$(mktemp -d ./tmp-react-native-repo)
+          git clone --branch "v$REACT_NATIVE_VERSION" --single-branch --depth 1 https://github.com/facebook/react-native.git $TEMP_REACT_NATIVE_DIR
+          cp -r ./node_modules/react-native/ReactAndroid $TEMP_REACT_NATIVE_DIR/packages/react-native/
+          echo "TEMP_REACT_NATIVE_DIR=$TEMP_REACT_NATIVE_DIR" >> $GITHUB_ENV
+
       - name: Setup gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: wrapper
+          build-root-directory: ${{ env.TEMP_REACT_NATIVE_DIR }}
 
       - name: Setup node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Make publish script executable
-        run: chmod +x scripts/publish-react-native.sh
-
-      - name: Execute publish script
-        run: ./scripts/publish-react-native.sh
+      - name: Create react-native artifacts
+        run: |
+          cd ${{ env.TEMP_REACT_NATIVE_DIR }} 
+          yarn install --non-interactive
+          ./gradlew build
