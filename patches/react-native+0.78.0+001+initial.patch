@@ -22,6 +22,14 @@ index 32287a7..d1d09c2 100644
  
  publishing {
      publications {
+@@ -24,6 +24,7 @@ publishing {
+                     from components.default
+                 }
+             }
++            groupId = "com.expensify.react"
+ 
+             // We populate the publishing version using the project version,
+             // appending -SNAPSHOT if on nightly or prerelase.
 @@ -67,6 +67,11 @@ publishing {
          maven {
              name = "mavenTempLocal"
