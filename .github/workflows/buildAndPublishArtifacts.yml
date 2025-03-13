@@ -99,7 +99,9 @@ jobs:
           node-version: 20
 
       - name: Create react-native artifacts
+        shell: bash
         run: |
           cd ${{ env.TEMP_REACT_NATIVE_DIR }} 
           yarn install --non-interactive
+          export ORG_GRADLE_PROJECT_reactNativeArchitectures="arm64-v8a"
           ./gradlew build
