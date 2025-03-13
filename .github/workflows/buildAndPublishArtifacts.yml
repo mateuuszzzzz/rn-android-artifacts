@@ -104,4 +104,4 @@ jobs:
           cd ${{ env.TEMP_REACT_NATIVE_DIR }} 
           yarn install --non-interactive
           export ORG_GRADLE_PROJECT_reactNativeArchitectures="arm64-v8a"
-          ./gradlew build
+          ./gradlew build -x :react-native_oss-library-example:build -x :packages:rn-tester:android:app:build -x :react-native_popup-menu-android:build
