@@ -1,0 +1,44 @@
+diff --git a/node_modules/react-native/ReactAndroid/gradle.properties b/node_modules/react-native/ReactAndroid/gradle.properties
+index 21b9dd3..63137d6 100644
+--- a/node_modules/react-native/ReactAndroid/gradle.properties
++++ b/node_modules/react-native/ReactAndroid/gradle.properties
+@@ -1,5 +1,5 @@
+ VERSION_NAME=0.78.0
+-react.internal.publishingGroup=com.facebook.react
++react.internal.publishingGroup=com.expensify.react
+ 
+ android.useAndroidX=true
+ 
+diff --git a/node_modules/react-native/ReactAndroid/publish.gradle b/node_modules/react-native/ReactAndroid/publish.gradle
+index 32287a7..d1d09c2 100644
+--- a/node_modules/react-native/ReactAndroid/publish.gradle
++++ b/node_modules/react-native/ReactAndroid/publish.gradle
+@@ -13,7 +13,7 @@ def signingKey = findProperty("SIGNING_KEY")
+ def signingPwd = findProperty("SIGNING_PWD")
+ 
+ def reactAndroidProjectDir = project(':packages:react-native:ReactAndroid').projectDir
+-def mavenTempLocalUrl = "file:///tmp/maven-local"
++def mavenTempLocalUrl = "http://localhost:8081/nexus/content/repositories/releases"
+ 
+ publishing {
+     publications {
+@@ -24,6 +24,7 @@ publishing {
+                     from components.default
+                 }
+             }
++            groupId = "com.expensify.react"
+ 
+             // We populate the publishing version using the project version,
+             // appending -SNAPSHOT if on nightly or prerelase.
+@@ -67,6 +67,11 @@ publishing {
+         maven {
+             name = "mavenTempLocal"
+             url = mavenTempLocalUrl
++            allowInsecureProtocol = true
++            credentials {
++                username = "admin"
++                password = "admin123"
++            }
+         }
+     }
+ 
