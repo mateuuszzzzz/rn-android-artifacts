@@ -5,7 +5,7 @@ index 21b9dd3..63137d6 100644
 @@ -1,5 +1,5 @@
  VERSION_NAME=0.78.0
 -react.internal.publishingGroup=com.facebook.react
-+react.internal.publishingGroup=com.expensify.react
++react.internal.publishingGroup=com.example.react
  
  android.useAndroidX=true
  
@@ -18,7 +18,7 @@ index 32287a7..d1d09c2 100644
  
  def reactAndroidProjectDir = project(':packages:react-native:ReactAndroid').projectDir
 -def mavenTempLocalUrl = "file:///tmp/maven-local"
-+def mavenTempLocalUrl = "http://localhost:8081/nexus/content/repositories/releases"
++def mavenTempLocalUrl = "https://maven.pkg.github.com/mateuuszzzzz/rn-android-artifacts"
  
  publishing {
      publications {
@@ -26,7 +26,7 @@ index 32287a7..d1d09c2 100644
                      from components.default
                  }
              }
-+            groupId = "com.expensify.react"
++            groupId = "com.example.react"
  
              // We populate the publishing version using the project version,
              // appending -SNAPSHOT if on nightly or prerelase.
@@ -34,10 +34,10 @@ index 32287a7..d1d09c2 100644
          maven {
              name = "mavenTempLocal"
              url = mavenTempLocalUrl
-+            allowInsecureProtocol = true
++            allowInsecureProtocol = false
 +            credentials {
-+                username = "admin"
-+                password = "admin123"
++                username = System.getenv("GH_PUBLISH_ACTOR")
++                password = System.getenv("GH_PUBLISH_TOKEN")
 +            }
          }
      }
