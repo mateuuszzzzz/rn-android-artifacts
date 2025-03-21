@@ -99,25 +99,26 @@ jobs:
           echo "RN_VERSION=$VERSION" >> $GITHUB_ENV
           
           # Get all versions and filter for our specific RN version prefix
-          LATEST_CUSTOM_VERSION=$(curl -s -u "${{ secrets.GH_PUBLISH_ACTOR }}:${{ secrets.GH_PUBLISH_TOKEN }}" \
+          FILTERED_MAVEN_VERSIONS=$(curl -s -u "${{ secrets.GH_PUBLISH_ACTOR }}:${{ secrets.GH_PUBLISH_TOKEN }}" \
             "https://maven.pkg.github.com/mateuuszzzzz/rn-android-artifacts/com/example/react/react-android/maven-metadata.xml" | \
             xmllint --xpath "//version/text()" - 2>/dev/null | \
             tr ' ' '\n' | \
             grep "^${VERSION}-" | \
-            sort -t'-' -k2 -n | \
-            tail -n1)
+            sort -t'-' -k2 -n)
 
-          
+          echo "Filtered Maven Versions: $FILTERED_MAVEN_VERSIONS"
+
+          LATEST_CUSTOM_VERSION=$(echo "$FILTERED_MAVEN_VERSIONS" | tail -n1)
+
+
           if [ -n "$LATEST_CUSTOM_VERSION" ]; then
             PATCH_ITERATION=$(echo $LATEST_CUSTOM_VERSION | sed 's/^.*-//')
             INCREMENTED_PATCH_ITERATION=$((t_version + 1))
             NEW_VERSION="${VERSION}-${INCREMENTED_PATCH_ITERATION}"
 
             echo "Found latest custom version: $LATEST_CUSTOM_VERSION. Incrementing to $NEW_VERSION"
-            echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
           else
             echo "No existing custom versions found for $VERSION. Starting from 0"
-            echo "NEW_VERSION=$VERSION-0" >> $GITHUB_ENV
           fi
 
       - name: Create react-native artifacts
@@ -131,7 +132,7 @@ jobs:
           echo "PR Number: ${{ github.event.inputs.PULL_REQUEST_NUMBER }}"
           echo "Commit Hash: ${{ needs.update-custom-builds.outputs.commit_hash }}"
           echo "Patches Hash: ${{ needs.update-custom-builds.outputs.patches_hash }}"
-          
+
           ./gradlew build -x :react-native_oss-library-example:build -x :packages:rn-tester:android:app:build -x :react-native_popup-menu-android:build -x lint -x test -x check
           ./gradlew publishAllToMavenTempLocal
         env:
