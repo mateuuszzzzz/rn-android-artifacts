@@ -113,6 +113,7 @@ jobs:
             PATCH_ITERATION=$(echo $LATEST_CUSTOM_VERSION | sed 's/^.*-//')
             INCREMENTED_PATCH_ITERATION=$((t_version + 1))
             NEW_VERSION="${VERSION}-${INCREMENTED_PATCH_ITERATION}"
+            echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
             echo "Found latest custom version: $LATEST_CUSTOM_VERSION. Incrementing to $NEW_VERSION"
           else
