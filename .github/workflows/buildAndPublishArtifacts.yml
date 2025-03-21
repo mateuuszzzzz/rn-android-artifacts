@@ -104,7 +104,7 @@ jobs:
 
           echo "Fetched Maven Metadata: $FETCHED_MAVEN_METADATA"
           
-          XML_VERSIONS=$($FETCHED_MAVEN_METADATA" | xmllint --xpath "//version/text()" - 2>/dev/null)
+          XML_VERSIONS=$(echo "$FETCHED_MAVEN_METADATA" | xmllint --xpath "//version/text()" - 2>/dev/null)
           echo "XML Versions: $XML_VERSIONS"
 
           FILTERED_MAVEN_VERSIONS=$(curl -s -u "${{ secrets.GH_PUBLISH_ACTOR }}:${{ secrets.GH_PUBLISH_TOKEN }}" \
