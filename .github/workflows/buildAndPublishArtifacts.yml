@@ -118,6 +118,7 @@ jobs:
             echo "Found latest custom version: $LATEST_CUSTOM_VERSION. Incrementing to $NEW_VERSION"
           else
             echo "No existing custom versions found for $VERSION. Starting from 0"
+            echo "NEW_VERSION=$VERSION-0" >> $GITHUB_ENV
           fi
 
       - name: Create react-native artifacts
