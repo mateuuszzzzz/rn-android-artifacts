@@ -99,6 +99,20 @@ jobs:
           echo "RN_VERSION=$VERSION" >> $GITHUB_ENV
           
           # Get all versions and filter for our specific RN version prefix
+          FETCHED_MAVEN_METADATA=$(curl -s -u "${{ secrets.GH_PUBLISH_ACTOR }}:${{ secrets.GH_PUBLISH_TOKEN }}" \
+            "https://maven.pkg.github.com/mateuuszzzzz/rn-android-artifacts/com/example/react/react-android/maven-metadata.xml")
+
+          echo "Fetched Maven Metadata: $FETCHED_MAVEN_METADATA"
+          
+          XML_VERSIONS=$($FETCHED_MAVEN_METADATA" | xmllint --xpath "//version/text()" - 2>/dev/null)
+          echo "XML Versions: $XML_VERSIONS"
+
+          FILTERED_MAVEN_VERSIONS=$(curl -s -u "${{ secrets.GH_PUBLISH_ACTOR }}:${{ secrets.GH_PUBLISH_TOKEN }}" \
+            "https://maven.pkg.github.com/mateuuszzzzz/rn-android-artifacts/com/example/react/react-android/maven-metadata.xml" | \
+            xmllint --xpath "//version/text()" - 2>/dev/null | \
+            tr ' ' '\n' | \
+            grep "^${VERSION}-" | \
+            sort -t'-' -k2 -n) 
           FILTERED_MAVEN_VERSIONS=$(curl -s -u "${{ secrets.GH_PUBLISH_ACTOR }}:${{ secrets.GH_PUBLISH_TOKEN }}" \
             "https://maven.pkg.github.com/mateuuszzzzz/rn-android-artifacts/com/example/react/react-android/maven-metadata.xml" | \
             xmllint --xpath "//version/text()" - 2>/dev/null | \
