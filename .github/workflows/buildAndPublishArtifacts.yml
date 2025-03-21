@@ -114,7 +114,7 @@ jobs:
 
           if [ -n "$LATEST_CUSTOM_VERSION" ]; then
             PATCH_ITERATION=$(echo $LATEST_CUSTOM_VERSION | sed 's/^.*-//')
-            INCREMENTED_PATCH_ITERATION=$((t_version + 1))
+            INCREMENTED_PATCH_ITERATION=$((PATCH_ITERATION + 1))
             NEW_VERSION="${VERSION}-${INCREMENTED_PATCH_ITERATION}"
             echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
             echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
