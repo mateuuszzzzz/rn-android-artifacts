@@ -56,7 +56,7 @@ index 32287a7..202e8eb 100644
 +                properties = [
 +                    "patchesHash": System.getenv("PATCHES_HASH"),
 +                    "commitHash": System.getenv("COMMIT_HASH"),
-+                    "pullRequestUrl": System.getenv("PULL_REQUEST_URL")
++                    "pullRequestNumber": System.getenv("PULL_REQUEST_NUMBER")
 +                ]
 +
                  developers {
