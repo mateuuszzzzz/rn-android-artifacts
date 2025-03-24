@@ -161,6 +161,11 @@ jobs:
           git config --global user.email "github-actions@github.com"
           
           MAPPINGS_FILE="mappings.json"
+
+          # Create mappings file with empty object if it doesn't exist
+          if [ ! -f "$MAPPINGS_FILE" ]; then
+            echo '{}' > "$MAPPINGS_FILE"
+          fi
           
           PATCHES_HASH="${{ needs.prepare-build.outputs.patches_hash }}"
           NEW_VERSION="${{ needs.publish-react-native.outputs.new_version}}"
