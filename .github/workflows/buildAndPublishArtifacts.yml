@@ -170,7 +170,7 @@ jobs:
           PATCHES_HASH="${{ needs.prepare-build.outputs.patches_hash }}"
           NEW_VERSION="${{ needs.publish-react-native.outputs.new_version}}"
 
-          jq --arg hash "PATCHES_HASH" --arg value "$NEW_VERSION" '. + {($hash): $value}' "$MAPPINGS_FILE" > temp.json && mv temp.json "$MAPPINGS_FILE"
+          jq --arg hash "$PATCHES_HASH" --arg value "$NEW_VERSION" '. + {($hash): $value}' "$MAPPINGS_FILE" > temp.json && mv temp.json "$MAPPINGS_FILE"
           
           # Commit and push changes
           git add "$MAPPINGS_FILE"
