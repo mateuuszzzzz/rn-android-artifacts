@@ -109,8 +109,11 @@ android {
 
 repositories {
     maven {
-        url "http://localhost:8081/nexus/content/groups/public"
-        allowInsecureProtocol true
+        url "https://maven.pkg.github.com/testpackagesaccess/rn-android-artifacts"
+        credentials {
+            username = System.getenv("GH_USERNAME")
+            password = System.getenv("GH_TOKEN")
+        }
     }
 }
 
