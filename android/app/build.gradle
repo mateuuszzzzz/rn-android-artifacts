@@ -107,11 +107,21 @@ android {
     }
 }
 
-repositories {
-    maven {
-        url "http://localhost:8081/nexus/content/groups/public"
-        allowInsecureProtocol true
+
+if (System.getenv('CUSTOM_ARTIFACTS') == 'true') {
+    println "USING CUSTOM ARTIFACTS"
+    repositories {
+        maven {
+            url "https://maven.pkg.github.com/mateuuszzzzz/rn-android-artifacts"
+            credentials {
+                username = System.getenv("GH_USERNAME")
+                password = System.getenv("GH_TOKEN")
+            }
+        }
     }
+}
+else {
+    println "USING DEFAULT ARTIFACTS"
 }
 
 dependencies {
