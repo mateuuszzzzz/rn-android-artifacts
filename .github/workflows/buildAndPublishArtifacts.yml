@@ -130,7 +130,7 @@ jobs:
         run: |
           cd ${{ env.TEMP_REACT_NATIVE_DIR }} 
           yarn install --non-interactive
-          export ORG_GRADLE_PROJECT_reactNativeArchitectures="arm64-v8a"
+          export ORG_GRADLE_PROJECT_reactNativeArchitectures="armeabi-v7a,arm64-v8a,x86,x86_64"
 
           echo "Starting build and publication process for ${{ env.NEW_VERSION }}"
           echo "PR Number: ${{ github.event.inputs.PULL_REQUEST_NUMBER }}"
