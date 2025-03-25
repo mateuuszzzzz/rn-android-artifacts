@@ -6,7 +6,7 @@ index 7f773b6..8cf2ff6 100644
    TaskInterface<Void> startSurface(final ReactSurfaceImpl surface) {
      final String method = "startSurface(surfaceId = " + surface.getSurfaceID() + ")";
      log(method, "Schedule");
-+    log(method, "This log comes from our patched react-native");
++    log(method, "This log comes from our patched react-native.");
  
      attachSurface(surface);
      return callAfterGetOrCreateReactInstance(
