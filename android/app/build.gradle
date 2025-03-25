@@ -2,6 +2,21 @@ apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
+
+def customVersion = System.getenv("PATCHED_VERSION")
+
+if (customVersion != "") {
+    configurations.all { configuration ->
+        resolutionStrategy {
+            dependencySubstitution {
+                substitute(module('com.facebook.react:react-native')).using(module("${group}:react-android:${customVersion}"))
+                substitute(module('com.facebook.react:react-android')).using(module("${group}:react-android:${customVersion}"))
+            }
+            force "${group}:react-android:${customVersion}"
+        }
+    }
+}
+
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -108,8 +123,7 @@ android {
 }
 
 
-if (System.getenv('CUSTOM_ARTIFACTS') == 'true') {
-    println "USING CUSTOM ARTIFACTS"
+if (customVersion != "") {
     repositories {
         maven {
             url "https://maven.pkg.github.com/mateuuszzzzz/rn-android-artifacts"
@@ -119,9 +133,6 @@ if (System.getenv('CUSTOM_ARTIFACTS') == 'true') {
             }
         }
     }
-}
-else {
-    println "USING DEFAULT ARTIFACTS"
 }
 
 dependencies {

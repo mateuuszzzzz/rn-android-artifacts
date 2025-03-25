@@ -13,7 +13,7 @@ index 21b9dd3..23e5477 100644
 @@ -1,5 +1,5 @@
  VERSION_NAME=0.78.0
 -react.internal.publishingGroup=com.facebook.react
-+react.internal.publishingGroup=com.example.react
++react.internal.publishingGroup=com.facebook.react
  
  android.useAndroidX=true
  
