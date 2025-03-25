@@ -137,8 +137,8 @@ jobs:
           echo "Commit Hash: ${{ needs.prepare-build.outputs.commit_hash }}"
           echo "Patches Hash: ${{ needs.prepare-build.outputs.patches_hash }}"
 
-          ./gradlew build -x :react-native_oss-library-example:build -x :packages:rn-tester:android:app:build -x :react-native_popup-menu-android:build -x lint -x test -x check
-          ./gradlew publishAllToMavenTempLocal
+          ./gradlew packages:react-native:ReactAndroid:build -x :react-native_oss-library-example:build -x :packages:rn-tester:android:app:build -x :react-native_popup-menu-android:build -x lint -x test -x check
+          ./gradlew :packages:react-native:ReactAndroid:publishAllPublicationsToMavenTempLocalRepository
         env:
           GH_PUBLISH_ACTOR: ${{ secrets.GH_PUBLISH_ACTOR }}
           GH_PUBLISH_TOKEN: ${{ secrets.GH_PUBLISH_TOKEN }}
