@@ -1,0 +1,12 @@
+diff --git a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/runtime/ReactHostImpl.java b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/runtime/ReactHostImpl.java
+index 7f773b6..8cf2ff6 100644
+--- a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/runtime/ReactHostImpl.java
++++ b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/runtime/ReactHostImpl.java
+@@ -260,6 +260,7 @@ public class ReactHostImpl implements ReactHost {
+   TaskInterface<Void> startSurface(final ReactSurfaceImpl surface) {
+     final String method = "startSurface(surfaceId = " + surface.getSurfaceID() + ")";
+     log(method, "Schedule");
++    log(method, "This log comes from our patched react-native");
+ 
+     attachSurface(surface);
+     return callAfterGetOrCreateReactInstance(

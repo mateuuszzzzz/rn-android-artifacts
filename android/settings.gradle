@@ -5,9 +5,7 @@ rootProject.name = 'RnArtifacts'
 include ':app'
 includeBuild('../node_modules/@react-native/gradle-plugin')
 
-
-println "CUSTOM_ARTIFACTS env value: ${System.getenv('CUSTOM_ARTIFACTS')}"
-if(System.getenv('CUSTOM_ARTIFACTS') != 'true') {
+if(System.getenv('PATCHED_VERSION') == "") {
     includeBuild('../node_modules/react-native') {
         dependencySubstitution {
             substitute(module("com.facebook.react:react-android")).using(project(":packages:react-native:ReactAndroid"))
