@@ -9,6 +9,6 @@
 
 
 
-# Building app with prebuilt artifacts (if hash of current hashes is in `mappings.json`)
+# Building app with prebuilt artifacts (if hash of current hashes is in `mappings.json`, otherwise it fallbacks to build from source)
 1. `npm i`
 2. `npm run android`
